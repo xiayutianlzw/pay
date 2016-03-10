@@ -69,5 +69,28 @@ class Request @Inject() extends Controller{
   }
 
   /**即时到账**/
+  def directPay(partner: String,
+                sellerId: String,
+                outTradeNo: String = "test10002",
+                totalFee: String = "0.01",
+                subject: String = "GuoMao pay test") = Action.async{
+    log.debug("outTradeNo:"+outTradeNo+" totalFee:"+totalFee+" subject:"+subject)
+    val newOutTradeNo ="test"+System.currentTimeMillis().toString
+    val newSubject = "GuoMao pay test"
+    val subjectEncode = URLEncoder.encode(newSubject,"utf-8").replaceAll("\\+","%20") // encode方法会把空格编码成加号（而不是%20），解码时会把加号和%20都解码为空格，因此这里编码时手动把加号替换成%20
+    log.debug("subjectEncode:"+subjectEncode)//传输的时候需要是编码后的值
+    val para = buildPhonePayPara(partner,sellerId,newOutTradeNo,totalFee,subjectEncode)
+    log.debug("pay_parameter:"+para)
+
+
+    val sPara = util.AlipayCore.paraFilter(para)
+    val content = util.AlipayCore.createLinkString(para)
+    log.debug("content:"+content)
+    val mysign = util.AlipaySubmit.buildRequestMysign(sPara)
+    log.debug("sign:"+mysign)
+    val url = gateway+"?"+content+"&sign="+mysign+"&sign_type="+config.AlipayConfig.sign_type
+    log.debug(url)
+    Future.successful(Redirect(url))
+  }
 
 }
