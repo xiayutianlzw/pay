@@ -9,5 +9,14 @@ GET     /count                      @controllers.CountController.count
 # An example controller showing how to write asynchronous code
 GET     /message                    @controllers.AsyncController.message
 
+#API
+GET     /pay/api/payment            @controllers.api.PayApi.pay(appid:String,service:String,sid:Long,outTradeNo:String,fee:Float,tradeMode:Int,sn:String,nonce:String,signature:String)
+
+#alipay
+GET     /pay/alipay/payment         @controllers.alipay.Request.directPay(partner:String,sellerId:String,outTradeNo:String,totalFee:String,subject:String)
+
+#test
+GET     /pay/test                   @controllers.api.PayApi.test
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -79,4 +79,39 @@ class HttpUtil @Inject()(
     }
     futureResult
   }
+
+  def getJsonRequestSend(
+                          methodName: String,
+                          url: String,
+                          parameters: List[(String, String)]) = {
+    log.info("Get Request [" + methodName + "] Processing...")
+    log.debug(methodName + " url=" + url)
+    log.debug(methodName + " parameters=" + parameters)
+    val futureResult = ws.
+      url(url).
+      withFollowRedirects(follow = true).
+      withRequestTimeout(Duration(10, scala.concurrent.duration.SECONDS)).
+      withQueryString(parameters: _*).
+      get().map { response =>
+      log.debug("getRequestSend response headers:" + response.allHeaders)
+      log.debug("getRequestSend response body:" + response.body)
+      if (response.status != 200) {
+        val body = if (response.body.length > 1024) response.body.substring(0, 1024) else response.body
+        val msg = s"getRequestSend http failed url = $url, status = ${response.status}, text = ${response.statusText}, body = ${body}"
+        log.warn(msg)
+      }
+
+      response.body
+
+    }
+
+    futureResult.onFailure {
+      case e: Exception =>
+        log.error(methodName + " error:" + e.getMessage, e)
+        throw e
+    }
+    futureResult
+  }
+
+
 }

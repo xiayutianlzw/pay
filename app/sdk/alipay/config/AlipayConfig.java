@@ -23,38 +23,60 @@ package sdk.alipay.config;
 
 public class AlipayConfig {
 
+
 	//↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
 	// 合作身份者ID，以2088开头由16位纯数字组成的字符串
+
 	public static String partner = "2088411898385492";
 
+
 	// 收款支付宝账号，一般情况下收款账号就是签约账号
+
 	public static String seller_email = "service@neotel.com.cn";
+
 
 	public static String seller_id = partner;
 
+
 	// 商户的私钥
+
 	public static String key = "21ided5194kkfim9gzqiuk9sl4pkyhsl";
 
+
 	// 商户的私钥
+
 	public static String private_key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmAx/4hlT8uKWOt24h/QyRkuiyR+IoV4Nlm96ma+f03R3oR6hHYDncGXfmLKHo0Yu4GfFKdo65WhGbCEA/1uQuhhpxdUf9JOrjNgzFk5vIW7LEmlmmKwu1WCO34zUmqT9UtaxAuVUGyIIObdEiqwqTt3P+tuMcES3so1Ji1QGmIwIDAQAB";
 
+
 	// 支付宝的公钥，无需修改该值
+
 	public static String ali_public_key  = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
+
 
 
 	//↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
+
 	public static String it_b_pay = "1h";
+
 
 	public static String payment_type = "1";
 
+
 	// 调试用，创建TXT日志文件夹路径
+
 	public static String log_path = "D:\\";
 
+
 	// 字符编码格式 目前支持 gbk 或 utf-8
+
 	public static String input_charset = "utf-8";
 
+
 	// 签名方式 不需修改
+
 	public static String sign_type = "MD5";
+
 
 }
