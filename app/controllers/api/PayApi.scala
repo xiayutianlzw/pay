@@ -7,6 +7,8 @@ import play.api.Logger
 import common.Constants
 import scala.concurrent.Future
 import util.{SecureUtil,HttpUtil}
+import models.dao.OrderDao
+import common.errorcode.ApiErrorCode
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -15,7 +17,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class PayApi @Inject()(
                         val actionUtils: ActionUtils,
-                      httpUtil: HttpUtil
+                      httpUtil: HttpUtil,
+                      orderDao: OrderDao
                         ) extends Controller{
 
   import actionUtils._
@@ -26,23 +29,30 @@ class PayApi @Inject()(
          appid:String,
          service:String,
          sid:Long,
-         outTradeNo:String,
+         inTradeNo:String,
          fee:Float,
          tradeMode:Int,
          sn:String,
          nonce:String,
          signature:String) = checkSignature(
-  appid,sn,List(appid,service,sid.toString,outTradeNo,fee.toString,tradeMode.toString,sn,nonce),signature
+  appid,sn,List(appid,service,sid.toString,inTradeNo,fee.toString,tradeMode.toString,sn,nonce),signature
   ){
     loggingAction.async{
-      tradeMode match{
-        case Constants.tradeMode.alipay =>
-          val url = "http://localhost:9000/pay/alipay/payment?partner=2088411898385492" +
-            "&sellerId=2088411898385492" +
-            s"&outTradeNo=$outTradeNo" +
-            s"&totalFee=$fee" +
-            "&subject=测试"
-          Future.successful(Redirect(url))
+      val outTradeNo = appid+inTradeNo
+      orderDao.createOrder(outTradeNo,fee,sid,appid,inTradeNo,tradeMode,System.currentTimeMillis()).map{add =>
+        if(add > 0){
+          tradeMode match{
+            case Constants.tradeMode.alipay =>
+              val url = "http://localhost:9000/pay/alipay/payment?partner=2088411898385492" +
+                "&sellerId=2088411898385492" +
+                s"&outTradeNo=$outTradeNo" +
+                s"&totalFee=$fee" +
+                "&subject=测试"
+              Redirect(url)
+          }
+        }else{
+          Ok(ApiErrorCode.AddOrderFail)
+        }
       }
     }
   }

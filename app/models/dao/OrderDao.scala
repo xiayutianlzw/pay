@@ -21,4 +21,9 @@ class OrderDao @Inject()(
   def isProcessed(outTradeNo:String) = db.run(
   order.filter(_.outTradeNo === outTradeNo).map(_.isProcessed == Constants.orderIsProcessed).result.head
   )
+
+  def createOrder(outTradeNo:String,fee:Float,sid:Long,appid:String,inTradeNo:String,tradeMode:Int,timestamp:Long) = db.run(
+  order.map(i => (i.outTradeNo,i.fee,i.isProcessed,i.sid,i.appid,i.inTradeNo,i.timestamp,i.tradeMode)) +=
+    (outTradeNo,fee,Constants.orderNotProcessed,sid,appid,inTradeNo,timestamp,tradeMode)
+  ).mapTo[Int]
 }

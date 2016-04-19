@@ -11,5 +11,6 @@ object ApiErrorCode extends BaseJsonProtocols{
   def IllegalAppid = jsonResult(1001000,"illegal appId")
   def SnExisted = jsonResult(1001001,"this sn is used in one minute")
   def AuthenticateFail = jsonResult(1001002,"authenticate fail")
+  def AddOrderFail = jsonResult(1001003,"add order to orderDao fail")
 
 }
